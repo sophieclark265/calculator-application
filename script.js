@@ -23,3 +23,10 @@ function minus(num1, num2) {
 }
 
 console.log(minus(2, 1)); // should get 1
+
+function operate(operator, num1, num2) {
+  let resultOfOfOperator = operator(num1, num2);
+  return resultOfOfOperator;
+}
+
+console.log("calling operate! " + operate(add, 3, 4)); // should be 7
