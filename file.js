@@ -1,3 +1,24 @@
+let digits = document.querySelectorAll(".digits");
+
+let responsiveDigits = digits.forEach((digit) => {
+  digit.addEventListener("click", populateBottomScreen);
+});
+
+let holdAnswer = 0;
+
+let bottomScreen = document.querySelector(".bottom-screen"); // grab bigScreen HTML dom
+let topScreen = document.querySelector(".top-screen");
+let operandChosen;
+let firstInput = topScreen.textContent;
+let secondInput = bottomScreen.textContent;
+
+let equals = document.querySelector(".digits-equal");
+
+equals.addEventListener("click", getAnswer);
+
+let arrayOfInputs = [];
+
+// operand functions
 function add(num1, num2) {
   return num1 + num2;
 }
@@ -7,24 +28,117 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-  return num1 / num2;
+  let answer = num1 / num2;
+  return answer;
 }
 
 function minus(num1, num2) {
   return num1 - num2;
 }
 
-function operate(operator, num1, num2) {
-  let resultOfOfOperator = operator(num1, num2);
-  return resultOfOfOperator;
+// function operate(operator, num1, num2) {
+//   let resultOfOfOperator = operator(num1, num2);
+//   return resultOfOfOperator;
+// }
+
+//
+
+function populateBottomScreen(event) {
+  // fill out bottom screen
+  let digitChosen = event.target.innerText; // gets number or operand chosen
+  if (
+    digitChosen == "*" ||
+    digitChosen == "/" ||
+    digitChosen == "-" ||
+    digitChosen == "+" ||
+    digitChosen == "C"
+  ) {
+    clearBottomScreen(digitChosen); // clear bottom screen
+  } else {
+    bottomScreen.textContent += digitChosen; // populate bottom screen with digit chosen
+    arrayOfInputs.push(digitChosen);
+    console.log("first function array of Inputs state " + arrayOfInputs);
+    if (arrayOfInputs[0] && arrayOfInputs[1]) {
+      let num1 = arrayOfInputs[0];
+      let num2 = arrayOfInputs[1];
+      executePair(num1, num2);
+    }
+  }
 }
 
-let buttons = document.querySelectorAll("td");
+function executePair(num1, num2) {
+  console.log("running execute pair func");
+  if (operandChosen == "*") {
+    answer = multiply(num1, num2);
+  } else if (operandChosen == "/") {
+    answer = divide(num1, num2);
+  } else if (operandChosen == "+") {
+    num1 = Number(num1);
+    num2 = Number(num2);
+    answer = add(num1, num2);
+  } else if (operandChosen == "-") {
+    answer = minus(num1, num2);
+  }
 
-buttons.forEach((button) => {
-  button.addEventListener("click", display);
-});
+  let numberAnswer = Number(answer);
 
-function display(input) {
-  alert("user clicked " + e);
+  holdAnswer = numberAnswer;
+
+  topScreen.textContent = holdAnswer;
+  bottomScreen.textContent = "";
+  arrayOfInputs = []; // 1 + 1 is 2, delete array and push 2
+  operandChosen = 0; // then if i add 1 again, i need to get 3
+  arrayOfInputs.push(holdAnswer);
 }
+
+function clearBottomScreen(digitChosen) {
+  //clear bottom screen, and/or populate top
+  // clear bottom screen
+  if (digitChosen == "C") {
+    // if reset button pressed, delete bottomScreen text
+    bottomScreen.textContent = "";
+    topScreen.textContent = "";
+    arrayOfInputs = [];
+  } else {
+    operandChosen = digitChosen;
+    // fill out top screen, then reset bottom screen
+    let bottomScreenText = bottomScreen.textContent;
+    populateTopScreen(bottomScreenText, operandChosen);
+    bottomScreen.textContent = ""; // reset bottom screen
+  }
+}
+
+function populateTopScreen(bottomScreenText, operandChosen) {
+  topScreen.textContent = bottomScreenText + operandChosen; // give top screen text that was in bottom screen
+  console.log("this is array so far " + arrayOfInputs);
+}
+
+// function operandDecider(num1, num2, operand) {
+//   console.log("operand decider func has been called");
+// }
+// event object
+// target attribute or field
+
+function getAnswer() {
+  // operand top number by bottom number
+  let answer;
+  let num2 = bottomScreen.textContent;
+  let num1 = topScreen.textContent;
+  if (operandChosen == "*") {
+    answer = multiply(num1, num2);
+  } else if (operandChosen == "/") {
+    answer = divide(num1, num2);
+  } else if (operandChosen == "+") {
+    num1 = Number(num1);
+    num2 = Number(num2);
+    answer = add(num1, num2);
+  } else if (operandChosen == "-") {
+    answer = minus(num1, num2);
+  }
+  topScreen.textContent = "";
+  bottomScreen.textContent = "";
+  bottomScreen.textContent = answer;
+}
+
+// as soon as two inputs with one operand, need to do calculation and store result
+//
