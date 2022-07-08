@@ -13,6 +13,7 @@ equals.addEventListener("click", getFinalResult);
 let holdAnswer = 0;
 let operandChosen;
 let arrayOfInputs = [];
+let equalsClickedLast = false;
 
 // operand functions
 function add(num1, num2) {
@@ -38,14 +39,14 @@ function minus(num1, num2) {
   return num1 - num2;
 }
 
-// function operate(operator, num1, num2) {
-//   let resultOfOfOperator = operator(num1, num2);
-//   return resultOfOfOperator;
-// }
-
-//
-
 function handleDigitClick(event) {
+  // whenever we get a digit click we need to check for equals being clicked last
+  // if that happens we should replace top screen with the last result we computed
+  if (equalsClickedLast) {
+    topScreen.textContent = "";
+    equalsClickedLast = false;
+  }
+
   // fill out bottom screen
   let digitChosen = event.target.innerText; // gets number or operand chosen
   if (
@@ -55,8 +56,9 @@ function handleDigitClick(event) {
     digitChosen == "+" ||
     digitChosen == "C"
   ) {
+    arrayOfInputs.push(bottomScreen.textContent);
     crunchNumbers();
-    clearBottomScreen(digitChosen); // clear bottom screen
+    handleNonDigitInput(digitChosen); // clear bottom screen
   } else {
     saveBottomScreenInput(digitChosen);
   }
@@ -64,7 +66,6 @@ function handleDigitClick(event) {
 
 function saveBottomScreenInput(input) {
   bottomScreen.textContent += input; // populate bottom screen with digit chosen
-  arrayOfInputs.push(input);
 }
 
 function crunchNumbers() {
@@ -91,18 +92,20 @@ function saveComputation(savedAnswer) {
   }
 }
 
-function clearBottomScreen(digitChosen) {
-  if (digitChosen == "C") {
-    //clear bottom screen, and/or populate top
-    // clear bottom screen
-    // if reset button pressed, delete bottomScreen text
-    bottomScreen.textContent = "";
-    topScreen.textContent = "";
-    arrayOfInputs = [];
+function clearAllScreens() {
+  bottomScreen.textContent = "";
+  topScreen.textContent = "";
+  arrayOfInputs = [];
+  operandChosen = 0;
+}
+
+function handleNonDigitInput(input) {
+  if (input == "C") {
+    clearAllScreens();
   } else {
-    operandChosen = digitChosen;
-    let bottomScreenText = bottomScreen.textContent;
-    populateTopScreen(bottomScreenText, operandChosen);
+    // if not "C" must be operand currently
+    operandChosen = input;
+    topScreen.textContent += `${bottomScreen.textContent} ${operandChosen} `;
     bottomScreen.textContent = ""; // reset bottom screen
   }
 }
@@ -112,16 +115,31 @@ function populateTopScreen(bottomScreenText, operandChosen) {
   console.log("this is array so far " + arrayOfInputs);
 }
 
+function appendBottomTextToTop() {
+  topScreen.textContent += bottomScreen.textContent;
+}
+
 function getFinalResult() {
-  if (arrayOfInputs.length == 1) {
-    let result = arrayOfInputs[0]; // if only one element in array before equals pressed, then first element is answer bc crunchNumbers has calculated result
-    bottomScreen.textContent = result;
-  } else {
-    let num1 = arrayOfInputs[0];
-    let num2 = arrayOfInputs[1];
-    let result = getAnswer(num1, num2);
-    bottomScreen.textContent = result;
+  if (equalsClickedLast) {
+    return;
   }
+
+  let num1;
+  let num2;
+  if (arrayOfInputs.length == 1) {
+    // if only one element in array before equals pressed,
+    // then first element is answer bc crunchNumbers has calculated result
+    num1 = arrayOfInputs[0];
+    num2 = bottomScreen.textContent;
+    appendBottomTextToTop();
+  } else {
+    num1 = arrayOfInputs[0];
+    num2 = arrayOfInputs[1];
+  }
+
+  let result = getAnswer(num1, num2);
+  bottomScreen.textContent = result;
+  equalsClickedLast = true;
 }
 
 function getAnswer(num1, num2) {
