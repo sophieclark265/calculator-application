@@ -28,8 +28,14 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-  let answer = num1 / num2;
-  return answer;
+  console.log("calling divide)");
+  if (num1 == 0 || num2 == 0) {
+    console.log("calling error function");
+    return errorMessage();
+  } else {
+    let answer = num1 / num2;
+    return answer;
+  }
 }
 
 function minus(num1, num2) {
@@ -84,17 +90,26 @@ function executePair(num1, num2) {
 
   holdAnswer = numberAnswer;
 
-  topScreen.textContent = holdAnswer;
-  bottomScreen.textContent = "";
-  arrayOfInputs = []; // 1 + 1 is 2, delete array and push 2
-  operandChosen = 0; // then if i add 1 again, i need to get 3
-  arrayOfInputs.push(holdAnswer);
+  if (isFinite(holdAnswer)) {
+    // only if finite number
+    topScreen.textContent = holdAnswer;
+    bottomScreen.textContent = "";
+    arrayOfInputs = []; // 1 + 1 is 2, delete array and push 2
+    operandChosen = 0; // then if i add 1 again, i need to get 3
+    arrayOfInputs.push(holdAnswer);
+  } else {
+    // if holdAnswer is infinite, call error func
+    topScreen.textContent = "";
+    arrayOfInputs.splice(-1, 1);
+    console.log("just spliced array of Inputs " + arrayOfInputs);
+    errorMessage();
+  }
 }
 
 function clearBottomScreen(digitChosen) {
-  //clear bottom screen, and/or populate top
-  // clear bottom screen
   if (digitChosen == "C") {
+    //clear bottom screen, and/or populate top
+    // clear bottom screen
     // if reset button pressed, delete bottomScreen text
     bottomScreen.textContent = "";
     topScreen.textContent = "";
@@ -139,6 +154,13 @@ function getAnswer() {
   bottomScreen.textContent = "";
   bottomScreen.textContent = answer;
 }
+
+function errorMessage() {
+  console.log("running error message function");
+  return (bottomScreen.textContent = "Oops! Can't divide by 0.");
+}
+
+let arraySpliced = false;
 
 // as soon as two inputs with one operand, need to do calculation and store result
 //
