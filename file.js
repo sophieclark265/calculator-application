@@ -13,6 +13,8 @@ let firstInput = topScreen.textContent;
 let secondInput = bottomScreen.textContent;
 
 let equals = document.querySelector(".digits-equal");
+let decimal = document.querySelector("#decimal");
+decimal.addEventListener("click", onClickDecimal);
 
 equals.addEventListener("click", getAnswer);
 
@@ -74,6 +76,7 @@ function populateBottomScreen(event) {
 
 function executePair(num1, num2) {
   console.log("running execute pair func");
+  let answer;
   if (operandChosen == "*") {
     answer = multiply(num1, num2);
   } else if (operandChosen == "/") {
@@ -153,6 +156,14 @@ function getAnswer() {
   topScreen.textContent = "";
   bottomScreen.textContent = "";
   bottomScreen.textContent = answer;
+}
+
+function onClickDecimal(event) {
+  let str = bottomScreen.textContent;
+  if (str[str.length - 1] == ".") {
+    return;
+  }
+  bottomScreen.textContent += ".";
 }
 
 function errorMessage() {
