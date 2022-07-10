@@ -25,10 +25,8 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-  console.log("calling divide)");
   if (num1 == 0 || num2 == 0) {
-    console.log("calling error function");
-    return errorMessage();
+    return errorMessage(); // if either input equals zero, do not divide an return error
   } else {
     let answer = num1 / num2;
     return answer;
@@ -40,9 +38,10 @@ function minus(num1, num2) {
 }
 
 function handleDigitClick(event) {
-  // whenever we get a digit click we need to check for equals being clicked last
-  // if that happens we should replace top screen with the last result we computed
   if (equalsClickedLast) {
+    // whenever click event is registered on a digit, check if equals was clicked last
+    // if true, then clear top screen and replace it with bottom screen result computed?
+    console.log("this is what is held in top screen " + topScreen.textContent);
     topScreen.textContent = "";
     equalsClickedLast = false;
   }
@@ -57,6 +56,7 @@ function handleDigitClick(event) {
     digitChosen == "C"
   ) {
     arrayOfInputs.push(bottomScreen.textContent);
+    // push bottomScreen digit to array if operand clicked
     crunchNumbers();
     handleNonDigitInput(digitChosen); // clear bottom screen
   } else {
@@ -64,8 +64,8 @@ function handleDigitClick(event) {
   }
 }
 
-function saveBottomScreenInput(input) {
-  bottomScreen.textContent += input; // populate bottom screen with digit chosen
+function saveBottomScreenInput(digit) {
+  bottomScreen.textContent += digit; // populate bottom screen with digit chosen
 }
 
 function crunchNumbers() {
@@ -74,7 +74,7 @@ function crunchNumbers() {
   }
   let num1 = arrayOfInputs[0];
   let num2 = arrayOfInputs[1];
-  console.log("running execute pair func");
+  console.log("this is array of Inputs " + arrayOfInputs);
   let answer = getAnswer(num1, num2);
   let numberAnswer = Number(answer);
   saveComputation(numberAnswer);
@@ -105,7 +105,9 @@ function handleNonDigitInput(input) {
   } else {
     // if not "C" must be operand currently
     operandChosen = input;
+    // assign bottomScreen text and operand chosen to top screen
     topScreen.textContent += `${bottomScreen.textContent} ${operandChosen} `;
+    // clear bottom screen
     bottomScreen.textContent = ""; // reset bottom screen
   }
 }
@@ -120,6 +122,7 @@ function appendBottomTextToTop() {
 }
 
 function getFinalResult() {
+  //equalsClickedLast automatically set to false, only turned to true when this func has run
   if (equalsClickedLast) {
     return;
   }
