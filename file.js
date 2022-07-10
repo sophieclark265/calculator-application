@@ -62,6 +62,7 @@ function handleDigitClick(event) {
   } else {
     saveBottomScreenInput(digitChosen);
   }
+  console.log(arrayOfInputs);
 }
 
 function saveBottomScreenInput(digit) {
@@ -74,7 +75,6 @@ function crunchNumbers() {
   }
   let num1 = arrayOfInputs[0];
   let num2 = arrayOfInputs[1];
-  console.log("this is array of Inputs " + arrayOfInputs);
   let answer = getAnswer(num1, num2);
   let numberAnswer = Number(answer);
   saveComputation(numberAnswer);
@@ -114,7 +114,6 @@ function handleNonDigitInput(input) {
 
 function populateTopScreen(bottomScreenText, operandChosen) {
   topScreen.textContent += bottomScreenText + operandChosen; // give top screen text that was in bottom screen
-  console.log("this is array so far " + arrayOfInputs);
 }
 
 function appendBottomTextToTop() {
@@ -130,21 +129,23 @@ function getFinalResult() {
   let num1;
   let num2;
   if (arrayOfInputs.length == 1) {
+    console.log("running only one array item");
     // if only one element in array before equals pressed,
     // then first element is answer bc crunchNumbers has calculated result
     num1 = arrayOfInputs[0];
     num2 = bottomScreen.textContent;
     appendBottomTextToTop();
-  } else {
-    num1 = arrayOfInputs[0];
-    num2 = arrayOfInputs[1];
   }
 
   let result = getAnswer(num1, num2);
   bottomScreen.textContent = result;
   equalsClickedLast = true;
-  console.log("this is arr of inputs " + arrayOfInputs);
+
+  // reset array to empty so it doesnt double count things
+  // bottom answer is result and this will get pushed to array when someone presses operand to compute new equation
+  // this lets us not double count things
   arrayOfInputs = [];
+  console.log(arrayOfInputs);
 }
 
 function getAnswer(num1, num2) {
@@ -160,6 +161,11 @@ function getAnswer(num1, num2) {
     answer = add(num1, num2);
   } else if (operandChosen == "-") {
     answer = minus(num1, num2);
+  }
+
+  if (answer % 1 != 0) {
+    // if answer has a decimal in it
+    answer = answer.toFixed(5);
   }
   return answer;
 }
