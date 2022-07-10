@@ -41,9 +41,9 @@ function handleDigitClick(event) {
   if (equalsClickedLast) {
     // whenever click event is registered on a digit, check if equals was clicked last
     // if true, then clear top screen and replace it with bottom screen result computed?
-    console.log("this is what is held in top screen " + topScreen.textContent);
     topScreen.textContent = "";
     equalsClickedLast = false;
+    // arrayOfInputs.shift();
   }
 
   // fill out bottom screen
@@ -143,6 +143,8 @@ function getFinalResult() {
   let result = getAnswer(num1, num2);
   bottomScreen.textContent = result;
   equalsClickedLast = true;
+  console.log("this is arr of inputs " + arrayOfInputs);
+  arrayOfInputs = [];
 }
 
 function getAnswer(num1, num2) {
